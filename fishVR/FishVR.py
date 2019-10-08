@@ -37,10 +37,6 @@ x_change = 10
 
 ############# fish vr #############################
 
-
-
-
-
 cap = cv2.VideoCapture(0)
 
 # Create the haar cascade

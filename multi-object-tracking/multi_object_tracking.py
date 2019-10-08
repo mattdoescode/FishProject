@@ -41,11 +41,12 @@ if not args.get("video", False):
 else:
 	vs = cv2.VideoCapture(args["video"])
 
+frameCount = 0
+
 # loop over frames from the video stream
 while True:
 	# grab the current frame, then handle if we are using a
 	# VideoStream or VideoCapture object
-	print("looping")
 	frame = vs.read()
 	frame = frame[1] if args.get("video", False) else frame
 
@@ -55,7 +56,7 @@ while True:
 		break
 
 	# resize the frame (so we can process it faster)
-	frame = imutils.resize(frame, width=600)
+	frame = imutils.resize(frame, width=1000)
 
 	# grab the updated bounding box coordinates (if any) for each
 	# object that is being tracked
@@ -65,10 +66,14 @@ while True:
 	# loop over the bounding boxes and draw then on the frame
 	for box in boxes:
 		(x, y, w, h) = [int(v) for v in box]
+		#
 		cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
 	# show the output frame
-	cv2.imshow("Frame", frame)
+	frameCount = frameCount + 1
+	print(frameCount)
+	cv2.imshow("Tracked Fish", frame)
+
 	key = cv2.waitKey(1) & 0xFF
 
 	# if the 's' key is selected, we are going to "select" a bounding
