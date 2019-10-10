@@ -33,9 +33,11 @@ OPENCV_OBJECT_TRACKERS = {
 # initialize OpenCV's special multi-object tracker
 trackers = cv2.MultiTracker_create()
 
-headRow = ["time", "frame", "x position", "y position", "z position"]
-
+# initialize the csv file
+headRow = ["time", "frame number", "x position", "y position", "z position"]
 functions.writeToCSV(headRow)
+# frame counter (recorded in the CSV)
+frameCount = 0
 
 # if a video path was not supplied, grab the reference to the web cam
 if not args.get("video", False):
@@ -46,8 +48,6 @@ if not args.get("video", False):
 # otherwise, grab a reference to the video file
 else:
     vs = cv2.VideoCapture(args["video"])
-
-frameCount = 0
 
 # loop over frames from the video stream
 while True:
@@ -77,10 +77,18 @@ while True:
         xPos = x + (w / 2)
         yPos = y + (h / 2)
 
-        print("Xpos :", x, "Ypos :", y)
+        #print out the x and y for each tracked object
+        # print("Xpos :", x, "Ypos :", y)
 
-    # show the output frame
-    frameCount = frameCount + 1
+        # record the data and
+        dataToRecord = [0, frameCount, xPos, yPos, 0]
+        functions.appendToCSV(dataToRecord)
+
+
+
+        frameCount = frameCount + 1
+
+
     # print("Frame count: ", frameCount)
     cv2.imshow("Tracked Fish", frame)
 
