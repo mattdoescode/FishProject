@@ -84,10 +84,7 @@ while True:
         dataToRecord = [0, frameCount, xPos, yPos, 0]
         functions.appendToCSV(dataToRecord)
 
-
-
         frameCount = frameCount + 1
-
 
     # print("Frame count: ", frameCount)
     cv2.imshow("Tracked Fish", frame)
