@@ -10,20 +10,27 @@ import imutils
 import time
 import cv2
 
+import functions
+
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
 ap.add_argument("-v", "--video", help="path to the video file")
-ap.add_argument("-a", "--min-area", type=int, default=500, help="minimum area size")
+ap.add_argument("-a", "--min-area", type=int, default=700, help="minimum area size")
 args = vars(ap.parse_args())
 
 # if the video argument is None, then we are reading from webcam
 if args.get("video", None) is None:
 	vs = VideoStream(src=0).start()
 	time.sleep(2.0)
-
 # otherwise, we are reading from a video file
 else:
 	vs = cv2.VideoCapture(args["video"])
+
+# initialize the csv file
+headRow = ["object-number", "time", "frame-number", "x position", "y position", "z position"]
+functions.writeToCSV(headRow)
+# frame counter (recorded in the CSV)
+frameCount = 0
 
 # initialize the first frame in the video stream
 firstFrame = None
@@ -34,7 +41,7 @@ while True:
 	# text
 	frame = vs.read()
 	frame = frame if args.get("video", None) is None else frame[1]
-	text = "Unoccupied"
+	text = "No movement"
 
 	# if the frame could not be grabbed, then we have reached the end
 	# of the video
@@ -64,7 +71,9 @@ while True:
 	cnts = imutils.grab_contours(cnts)
 
 	# loop over the contours
+	cCount = 0;
 	for c in cnts:
+		cCount = cCount + 1;
 		# if the contour is too small, ignore it
 		if cv2.contourArea(c) < args["min_area"]:
 			continue
@@ -73,7 +82,19 @@ while True:
 		# and update the text
 		(x, y, w, h) = cv2.boundingRect(c)
 		cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-		text = "Occupied"
+		text = "The fish is moving"
+
+		xPos = x + (w / 2)
+		yPos = y + (h / 2)
+
+		# print out the x and y for each tracked object
+		# print("Xpos :", x, "Ypos :", y)
+
+		# record the data and
+		dataToRecord = [cCount, datetime.datetime.now(), frameCount, xPos, yPos, 0]
+		functions.appendToCSV(dataToRecord)
+
+		frameCount = frameCount + 1
 
 	# draw the text and timestamp on the frame
 	cv2.putText(frame, "Room Status: {}".format(text), (10, 20),
@@ -89,7 +110,8 @@ while True:
 
 	# if the `q` key is pressed, break from the lop
 	if key == ord("q"):
-		break
+		functions.averageCSV()
+		exit()
 
 # cleanup the camera and close any open windows
 vs.stop() if args.get("video", None) is None else vs.release()

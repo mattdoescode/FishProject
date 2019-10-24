@@ -10,3 +10,6 @@ def appendToCSV(data):
     with open(r'fishData.csv', 'a', newline='') as f:
         writer = csv.writer(f)
         writer.writerow(data)
+
+def averageCSV():
+    print("fixed CSV file")
