@@ -27,13 +27,18 @@ else:
 	vs = cv2.VideoCapture(args["video"])
 
 # initialize the csv file
-headRow = ["object-number", "time", "frame-number", "x position", "y position", "z position"]
+headRow = ["object-number", "recorded time", "run time", "frame-number", "x position", "y position", "z position"]
 functions.writeToCSV(headRow)
 # frame counter (recorded in the CSV)
 frameCount = 0
 
 # initialize the first frame in the video stream
 firstFrame = None
+
+# initialize timer
+# timer is set to 10 FPS
+nextFrameTime = time.time() + 0.1
+totalRunTime = time.time()
 
 # loop over the frames of the video
 while True:
@@ -90,11 +95,13 @@ while True:
 		# print out the x and y for each tracked object
 		# print("Xpos :", x, "Ypos :", y)
 
-		# record the data and
-		dataToRecord = [cCount, datetime.datetime.now(), frameCount, xPos, yPos, 0]
-		functions.appendToCSV(dataToRecord)
+		# record the data in accordance to the timer
+		if nextFrameTime <= time.time():
+			nextFrameTime = nextFrameTime + 0.1
+			dataToRecord = [cCount, datetime.datetime.now(), time.time() - totalRunTime, frameCount, xPos, yPos, 0]
+			functions.appendToCSV(dataToRecord)
 
-		frameCount = frameCount + 1
+			frameCount = frameCount + 1
 
 	# draw the text and timestamp on the frame
 	cv2.putText(frame, "Room Status: {}".format(text), (10, 20),
