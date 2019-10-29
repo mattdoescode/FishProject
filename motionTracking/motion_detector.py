@@ -105,6 +105,8 @@ while True:
 			# record the data in accordance to the timer
 			if nextFrameTime <= time.time():
 				nextFrameTime = nextFrameTime + 0.1
+				xPos = x + (w / 2)
+				yPos = y + (h / 2)
 				dataToRecord = [objectCount, datetime.datetime.now(), time.time() - totalRunTime, frameCount, xPos,
 								yPos, 0]
 				functions.appendToCSV(dataToRecord)
@@ -113,9 +115,6 @@ while True:
 			cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2)
 
 		text = "The fish is moving"
-
-		xPos = x + (w / 2)
-		yPos = y + (h / 2)
 
 		# print out the x and y for each tracked object
 		# print("Xpos :", x, "Ypos :", y)
