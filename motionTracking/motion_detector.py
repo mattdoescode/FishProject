@@ -102,6 +102,13 @@ while True:
 
 		if objectCount == largestObjCount:
 			cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+			# record the data in accordance to the timer
+			if nextFrameTime <= time.time():
+				nextFrameTime = nextFrameTime + 0.1
+				dataToRecord = [objectCount, datetime.datetime.now(), time.time() - totalRunTime, frameCount, xPos,
+								yPos, 0]
+				functions.appendToCSV(dataToRecord)
+				frameCount = frameCount + 1
 		else:
 			cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2)
 
@@ -112,14 +119,6 @@ while True:
 
 		# print out the x and y for each tracked object
 		# print("Xpos :", x, "Ypos :", y)
-
-		# record the data in accordance to the timer
-		if nextFrameTime <= time.time():
-			nextFrameTime = nextFrameTime + 0.1
-			dataToRecord = [objectCount, datetime.datetime.now(), time.time() - totalRunTime, frameCount, xPos, yPos, 0]
-			functions.appendToCSV(dataToRecord)
-
-			frameCount = frameCount + 1
 
 	# draw the text and timestamp on the frame
 	cv2.putText(frame, "Room Status: {}".format(text), (10, 20),
