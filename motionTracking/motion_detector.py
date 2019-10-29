@@ -76,9 +76,20 @@ while True:
 	cnts = imutils.grab_contours(cnts)
 
 	# loop over the contours
-	cCount = 0;
+	largestObjCount = 0
+	largestObjSize = 0
+
+	count = 1
 	for c in cnts:
-		cCount = cCount + 1;
+		(x, y, w, h) = cv2.boundingRect(c)
+		if w*h > largestObjSize:
+			largestObjSize = w*h
+			largestObjCount = count
+		count = count + 1
+
+	objectCount = 0
+	for c in cnts:
+		objectCount = objectCount + 1;
 		# if the contour is too small, ignore it
 		if cv2.contourArea(c) < args["min_area"]:
 			continue
@@ -86,7 +97,14 @@ while True:
 		# compute the bounding box for the contour, draw it on the frame,
 		# and update the text
 		(x, y, w, h) = cv2.boundingRect(c)
-		cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+
+		print("object count is: ", objectCount, "largest obj count is: ", largestObjCount)
+
+		if objectCount == largestObjCount:
+			cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+		else:
+			cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2)
+
 		text = "The fish is moving"
 
 		xPos = x + (w / 2)
@@ -98,7 +116,7 @@ while True:
 		# record the data in accordance to the timer
 		if nextFrameTime <= time.time():
 			nextFrameTime = nextFrameTime + 0.1
-			dataToRecord = [cCount, datetime.datetime.now(), time.time() - totalRunTime, frameCount, xPos, yPos, 0]
+			dataToRecord = [objectCount, datetime.datetime.now(), time.time() - totalRunTime, frameCount, xPos, yPos, 0]
 			functions.appendToCSV(dataToRecord)
 
 			frameCount = frameCount + 1
