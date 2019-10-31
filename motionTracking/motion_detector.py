@@ -27,7 +27,7 @@ else:
 	vs = cv2.VideoCapture(args["video"])
 
 # initialize the csv file
-headRow = ["object-number", "recorded time", "run time", "frame-number", "x position", "y position", "z position"]
+headRow = ["object-number", "recorded-time", "run-time", "frame-number", "x-position", "y-position", "z-position"]
 functions.writeToCSV(headRow)
 # frame counter (recorded in the CSV)
 frameCount = 0
@@ -98,16 +98,17 @@ while True:
 		# and update the text
 		(x, y, w, h) = cv2.boundingRect(c)
 
-		print("object count is: ", objectCount, "largest obj count is: ", largestObjCount)
+		#print("object count is: ", objectCount, "largest obj count is: ", largestObjCount)
 
 		if objectCount == largestObjCount:
 			cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
 			# record the data in accordance to the timer
 			if nextFrameTime <= time.time():
 				nextFrameTime = nextFrameTime + 0.1
+				print("adding record to CSV")
 				xPos = x + (w / 2)
 				yPos = y + (h / 2)
-				dataToRecord = [objectCount, datetime.datetime.now(), time.time() - totalRunTime, frameCount, xPos,
+				dataToRecord = [1, datetime.datetime.now(), time.time() - totalRunTime, frameCount, xPos,
 								yPos, 0]
 				functions.appendToCSV(dataToRecord)
 				frameCount = frameCount + 1
