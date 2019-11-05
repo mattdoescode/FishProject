@@ -1,3 +1,3 @@
 import functions
 
-functions.visualizeFish(500, 500)
+functions.visualizeFish(1000, 1000)
