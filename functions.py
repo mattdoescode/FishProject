@@ -28,6 +28,11 @@ def averageCSV():
             previousFrameTime = frameTime
             currentFrameTime = float(row.get("run-time"))
 
+            if previousFrameTime == 0:
+                frameTime = float(row.get("run-time"))
+                new_rows_list.append(row)
+                continue
+
             while previousFrameTime + errorTime < currentFrameTime:
                 print("error in file - adding record")
                 previousFrameTime = previousFrameTime + 0.1
