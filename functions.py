@@ -20,10 +20,10 @@ def averageCSV():
 
     # rows to be written to new file
     new_rows_list = []
-    errorTime = .15
+    errorTime = .12
     frameTime = 0
 
-    #read file
+    # read file
     with open('fishData.csv', newline='') as csvFile:
         reader = csv.DictReader(csvFile)
 
@@ -43,19 +43,41 @@ def averageCSV():
 
             # figure out how many missing frames there are
             if previousFrameTime + errorTime < currentFrameTime:
-                print("adding in", int(abs(previousFrameTime - currentFrameTime) / 0.1) - 1, "fake records")
 
+                fakeFrameCount = int(abs(previousFrameTime - currentFrameTime) / 0.1) - 1
+
+                print("adding in", fakeFrameCount, "fake records")
+
+                # our goal in the current record
+                # previous record
+                previousRecord = new_rows_list[totalLines - 1]
+
+                # find the differences in between the 2
+                # and average the changes
+                timeIncrement = (float(previousRecord.get("run-time")) - float(row.get("run-time"))) / fakeFrameCount - 1
+                xIncrement = (float(row.get("x-position")) - float(previousRecord.get("x-position"))) / (
+                        fakeFrameCount + 1)
+                yIncrement = (float(row.get("y-position")) - float(previousRecord.get("y-position"))) / (
+                            fakeFrameCount + 1)
+                zIncrement = (float(row.get("z-position")) - float(previousRecord.get("z-position"))) / (
+                            fakeFrameCount + 1)
+                # print(float(row.get("x-position")))
+                # print(float(previousRecord.get("x-position")))
+                # print(xIncrement)
+
+                frameCounter = 1
+                # add in the missing frames
                 while previousFrameTime + errorTime < currentFrameTime:
-
                     previousFrameTime = previousFrameTime + 0.1
                     fakeRecord = row.copy()
                     fakeRecord.update({"run-time": previousFrameTime})
                     fakeRecord.update({"recorded-time": 0})
                     fakeRecord.update({"frame-number": totalLines})
-                    fakeRecord.update({"x-position": 0})
-                    fakeRecord.update({"y-position": 0})
-                    fakeRecord.update({"z-position": 0})
+                    fakeRecord.update({"x-position": float(previousRecord.get("x-position")) + (frameCounter * xIncrement)})
+                    fakeRecord.update({"y-position": float(previousRecord.get("y-position")) + (frameCounter * yIncrement)})
+                    fakeRecord.update({"z-position": float(previousRecord.get("z-position")) + (frameCounter * zIncrement)})
                     totalLines = totalLines + 1
+                    frameCounter = frameCounter + 1
                     new_rows_list.append(fakeRecord)
 
             frameTime = currentFrameTime
@@ -125,7 +147,8 @@ def visualizeFish(display_width, display_height):
 
         gameDisplay.fill(black)
         print(frameCount)
-        fish(round(float(new_rows_list[frameCount].get("x-position"))), round(float(new_rows_list[frameCount].get("y-position"))))
+        fish(round(float(new_rows_list[frameCount].get("x-position"))),
+             round(float(new_rows_list[frameCount].get("y-position"))))
 
         # run until we run out of frames
         if frameCount < totalFrames - 1:
