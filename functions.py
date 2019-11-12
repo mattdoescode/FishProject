@@ -36,7 +36,9 @@ def averageCSV():
             while previousFrameTime + errorTime < currentFrameTime:
                 print("error in file - adding record")
                 previousFrameTime = previousFrameTime + 0.1
-                fakeRecord = row
+
+                fakeRecord = row.copy()
+
                 fakeRecord.update({"run-time": previousFrameTime})
                 print("previous time is: ", float(previousFrameTime))
                 fakeRecord.update({"recorded-time": 0})
