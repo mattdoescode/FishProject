@@ -27,6 +27,10 @@ def averageCSV():
     with open('fishData.csv', newline='') as csvFile:
         reader = csv.DictReader(csvFile)
 
+        # counter for each line in the CSV
+        # starts at 1 because the first line is automatically recorded
+        totalLines = 1
+
         # iterate over each row of the file looking for missing data
         for row in reader:
             previousFrameTime = frameTime
@@ -34,26 +38,32 @@ def averageCSV():
 
             if previousFrameTime == 0:
                 frameTime = float(row.get("run-time"))
-                new_rows_list.append(row)
+                new_rows_list.append(row.copy())
                 continue
 
-            while previousFrameTime + errorTime < currentFrameTime:
-                print("error in file - adding record")
-                previousFrameTime = previousFrameTime + 0.1
+            # figure out how many missing frames there are
+            if previousFrameTime + errorTime < currentFrameTime:
+                print("adding in", int(abs(previousFrameTime - currentFrameTime) / 0.1) - 1, "fake records")
 
-                fakeRecord = row.copy()
+                while previousFrameTime + errorTime < currentFrameTime:
 
-                fakeRecord.update({"run-time": previousFrameTime})
-                print("previous time is: ", float(previousFrameTime))
-                fakeRecord.update({"recorded-time": 0})
-                # fakeRecord.update({"frame-number": 0})
-                fakeRecord.update({"x-position": 0})
-                fakeRecord.update({"y-position": 0})
-                fakeRecord.update({"z-position": 0})
-                new_rows_list.append(fakeRecord)
+                    previousFrameTime = previousFrameTime + 0.1
+                    fakeRecord = row.copy()
+                    fakeRecord.update({"run-time": previousFrameTime})
+                    fakeRecord.update({"recorded-time": 0})
+                    fakeRecord.update({"frame-number": totalLines})
+                    fakeRecord.update({"x-position": 0})
+                    fakeRecord.update({"y-position": 0})
+                    fakeRecord.update({"z-position": 0})
+                    totalLines = totalLines + 1
+                    new_rows_list.append(fakeRecord)
 
             frameTime = currentFrameTime
-            new_rows_list.append(row)
+
+            tempRecord = row.copy()
+            tempRecord.update({"frame-number": totalLines})
+            totalLines = totalLines + 1
+            new_rows_list.append(tempRecord)
 
     # create new file and fill it with corrected data
     with open('fishDataCorrected.csv', 'w', newline='') as csvFile:
