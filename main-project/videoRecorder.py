@@ -20,11 +20,9 @@ frame_height2 = int(cap2.get(4))
 out = cv2.VideoWriter('outpy.avi', cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), 20, (frame_width, frame_height))
 out2 = cv2.VideoWriter('outpy2.avi', cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), 20, (frame_width2, frame_height2))
 
-while (True):
+while True:
     ret, frame = cap.read()
-
-    if ret == True:
-
+    if ret:
         # Write the frame into the file 'output.avi'
         out.write(frame)
 
@@ -36,7 +34,7 @@ while (True):
             break
 
     ret2, frame2 = cap2.read()
-    if ret2 == True:
+    if ret2:
         # Write the frame into the file 'output.avi'
         out2.write(frame2)
 

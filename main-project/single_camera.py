@@ -21,7 +21,6 @@ args = vars(ap.parse_args())
 # if the video argument is None, then we are reading from webcam
 if args.get("video", None) is None:
 	vs = VideoStream(src=0).start()
-	vs2 = VideoStream(src=1).start()
 	time.sleep(2.0)
 # otherwise, we are reading from a video file
 else:
@@ -46,7 +45,6 @@ while True:
 	# grab the current frame and initialize the occupied/unoccupied
 	# text
 	frame = vs.read()
-	frame2 = vs2.read()
 	frame = frame if args.get("video", None) is None else frame[1]
 	text = "No movement"
 
@@ -57,7 +55,6 @@ while True:
 
 	# resize the frame, convert it to grayscale, and blur it
 	frame = imutils.resize(frame, width=500)
-	frame2 = imutils.resize(frame2, width=500)
 	gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 	gray = cv2.GaussianBlur(gray, (21, 21), 0)
 
@@ -130,8 +127,7 @@ while True:
 		(10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
 
 	# show the frame and record if the user presses a key
-	cv2.imshow("Security Feed", frame)
-	cv2.imshow("camera 2", frame2)
+	cv2.imshow("Camera 1", frame)
 	cv2.imshow("Thresh", thresh)
 	cv2.imshow("Frame Delta", frameDelta)
 	key = cv2.waitKey(1) & 0xFF
