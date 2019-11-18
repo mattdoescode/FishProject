@@ -28,8 +28,10 @@ else:
     vs = cv2.VideoCapture(args["video"])
 
 # initialize the csv file
-# headRow = ["object-number", "recorded-time", "run-time", "frame-number", "x-position", "y-position", "z-position"]
-# functions.writeToCSV(headRow)
+headRow = ["object-number", "recorded-time", "run-time", "frame-number", "x-position", "y-position", "z-position"]
+functions.writeToCSV("fishdata-1", headRow)
+
+functions.writeToCSV("fishdata-2", headRow)
 
 # frame counter (recorded in the CSV)
 frameCount = 0

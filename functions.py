@@ -2,20 +2,20 @@ import csv
 import pygame
 
 
-def writeToCSV(data):
+def writeToCSV(filename, data):
     # write a new csv file
-    with open('fishData.csv', 'w', newline='') as csvFile:
+    with open(filename+".csv", 'w', newline='') as csvFile:
         fileWriter = csv.writer(csvFile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
         fileWriter.writerow(data)
 
 
-def appendToCSV(data):
-    with open('fishData.csv', 'a', newline='') as f:
+def appendToCSV(filename, data):
+    with open(filename+'.csv', 'a', newline='') as f:
         writer = csv.writer(f)
         writer.writerow(data)
 
 
-def averageCSV():
+def averageCSV(inputFileName, outputFileName):
     print("attempting to correct CSV file")
 
     # rows to be written to new file
@@ -24,7 +24,7 @@ def averageCSV():
     frameTime = 0
 
     # read file
-    with open('fishData.csv', newline='') as csvFile:
+    with open(inputFileName+'.csv', newline='') as csvFile:
         reader = csv.DictReader(csvFile)
 
         # counter for each line in the CSV
@@ -88,13 +88,12 @@ def averageCSV():
             new_rows_list.append(tempRecord)
 
     # create new file and fill it with corrected data
-    with open('fishDataCorrected.csv', 'w', newline='') as csvFile:
+    with open(outputFileName+'.csv', 'w', newline='') as csvFile:
         fileWriter = csv.writer(csvFile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
         fileWriter.writerow(
             ["object-number", "recorded-time", "run-time", "frame-number", "x-position", "y-position", "z-position"])
         for i in new_rows_list:
             fileWriter.writerow(i.values())
-
     print("completed. new csv file")
 
     # to average the CSV

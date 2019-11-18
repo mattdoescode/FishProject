@@ -27,8 +27,9 @@ else:
 	vs = cv2.VideoCapture(args["video"])
 
 # initialize the csv file
+inputFileName = "fishdata-single-cam"
 headRow = ["object-number", "recorded-time", "run-time", "frame-number", "x-position", "y-position", "z-position"]
-functions.writeToCSV(headRow)
+functions.writeToCSV(inputFileName, headRow)
 # frame counter (recorded in the CSV)
 frameCount = 0
 
@@ -110,7 +111,7 @@ while True:
 				yPos = y + (h / 2)
 				dataToRecord = [1, datetime.datetime.now(), time.time() - totalRunTime, frameCount, xPos,
 								yPos, 0]
-				functions.appendToCSV(dataToRecord)
+				functions.appendToCSV(inputFileName, dataToRecord)
 				frameCount = frameCount + 1
 		else:
 			cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2)
@@ -134,7 +135,7 @@ while True:
 
 	# if the `q` key is pressed, break from the lop
 	if key == ord("q"):
-		functions.averageCSV()
+		functions.averageCSV(inputFileName, "corrected-"+inputFileName)
 		exit()
 
 # cleanup the camera and close any open windows
