@@ -28,8 +28,8 @@ else:
 
 # initialize the csv file
 inputFileName = "fishdata-single-cam"
-headRow = ["object-number", "recorded-time", "run-time", "frame-number", "x-position", "y-position", "z-position"]
-functions.writeToCSV(inputFileName, headRow)
+functions.writeHeadCSV(inputFileName)
+
 # frame counter (recorded in the CSV)
 frameCount = 0
 

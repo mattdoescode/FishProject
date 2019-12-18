@@ -2,15 +2,23 @@ import csv
 import pygame
 
 
+def writeHeadCSV(filename):
+    data = ["object-number", "recorded-time", "run-time", "frame-number", "x-position", "y-position", "z-position",
+            "corrected-data"]
+    with open(filename + ".csv", 'w', newline='') as csvFile:
+        fileWriter = csv.writer(csvFile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+        fileWriter.writerow(data)
+
+
 def writeToCSV(filename, data):
     # write a new csv file
-    with open(filename+".csv", 'w', newline='') as csvFile:
+    with open(filename + ".csv", 'w', newline='') as csvFile:
         fileWriter = csv.writer(csvFile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
         fileWriter.writerow(data)
 
 
 def appendToCSV(filename, data):
-    with open(filename+'.csv', 'a', newline='') as f:
+    with open(filename + '.csv', 'a', newline='') as f:
         writer = csv.writer(f)
         writer.writerow(data)
 
@@ -24,7 +32,7 @@ def averageCSV(inputFileName, outputFileName):
     frameTime = 0
 
     # read file
-    with open(inputFileName+'.csv', newline='') as csvFile:
+    with open(inputFileName + '.csv', newline='') as csvFile:
         reader = csv.DictReader(csvFile)
 
         # counter for each line in the CSV
@@ -46,7 +54,10 @@ def averageCSV(inputFileName, outputFileName):
 
                 fakeFrameCount = int(abs(previousFrameTime - currentFrameTime) / 0.1) - 1
 
-                print("adding in", fakeFrameCount, "fake records")
+                if fakeFrameCount == 1:
+                    print("adding in 1 fake record")
+                else:
+                    print("adding in", fakeFrameCount, "fake record")
 
                 # our goal in the current record
                 # previous record
@@ -54,13 +65,14 @@ def averageCSV(inputFileName, outputFileName):
 
                 # find the differences in between the 2
                 # and average the changes
-                timeIncrement = (float(previousRecord.get("run-time")) - float(row.get("run-time"))) / fakeFrameCount - 1
+                # timeIncrement = (float(previousRecord.get("run-time")) - float(row.get("run-time"))) / fakeFrameCount - 1
+
                 xIncrement = (float(row.get("x-position")) - float(previousRecord.get("x-position"))) / (
                         fakeFrameCount + 1)
                 yIncrement = (float(row.get("y-position")) - float(previousRecord.get("y-position"))) / (
-                            fakeFrameCount + 1)
+                        fakeFrameCount + 1)
                 zIncrement = (float(row.get("z-position")) - float(previousRecord.get("z-position"))) / (
-                            fakeFrameCount + 1)
+                        fakeFrameCount + 1)
                 # print(float(row.get("x-position")))
                 # print(float(previousRecord.get("x-position")))
                 # print(xIncrement)
@@ -73,9 +85,13 @@ def averageCSV(inputFileName, outputFileName):
                     fakeRecord.update({"run-time": previousFrameTime})
                     fakeRecord.update({"recorded-time": 0})
                     fakeRecord.update({"frame-number": totalLines})
-                    fakeRecord.update({"x-position": float(previousRecord.get("x-position")) + (frameCounter * xIncrement)})
-                    fakeRecord.update({"y-position": float(previousRecord.get("y-position")) + (frameCounter * yIncrement)})
-                    fakeRecord.update({"z-position": float(previousRecord.get("z-position")) + (frameCounter * zIncrement)})
+                    fakeRecord.update(
+                        {"x-position": float(previousRecord.get("x-position")) + (frameCounter * xIncrement)})
+                    fakeRecord.update(
+                        {"y-position": float(previousRecord.get("y-position")) + (frameCounter * yIncrement)})
+                    fakeRecord.update(
+                        {"z-position": float(previousRecord.get("z-position")) + (frameCounter * zIncrement)})
+                    fakeRecord.update({"fakeRecord": "1"})
                     totalLines = totalLines + 1
                     frameCounter = frameCounter + 1
                     new_rows_list.append(fakeRecord)
@@ -88,7 +104,7 @@ def averageCSV(inputFileName, outputFileName):
             new_rows_list.append(tempRecord)
 
     # create new file and fill it with corrected data
-    with open(outputFileName+'.csv', 'w', newline='') as csvFile:
+    with open(outputFileName + '.csv', 'w', newline='') as csvFile:
         fileWriter = csv.writer(csvFile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
         fileWriter.writerow(
             ["object-number", "recorded-time", "run-time", "frame-number", "x-position", "y-position", "z-position"])
