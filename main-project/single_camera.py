@@ -110,8 +110,7 @@ while True:
 			if nextFrameTime <= time.time():
 				nextFrameTime = nextFrameTime + 0.1
 				print("adding record to CSV")
-				dataToRecord = [1, datetime.datetime.now(), time.time() - totalRunTime, frameCount, centerX,
-								centerY, 0]
+				dataToRecord = [1, datetime.datetime.now(), time.time() - totalRunTime, frameCount, centerX, centerY, 0, 0]
 				functions.appendToCSV(inputFileName, dataToRecord)
 				frameCount = frameCount + 1
 		else:
@@ -133,7 +132,7 @@ while True:
 
 	# if the `q` key is pressed, break from the lop
 	if key == ord("q"):
-		functions.averageCSV(inputFileName, "corrected-"+inputFileName)
+		functions.averageCSV(inputFileName, inputFileName+"-corrected")
 		exit()
 
 # cleanup the camera and close any open windows
