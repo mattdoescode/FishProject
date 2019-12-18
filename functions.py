@@ -118,7 +118,7 @@ def averageCSV(inputFileName, outputFileName):
     # new record will be an average position and time
 
 
-def visualizeFish(display_width, display_height):
+def visualizeFish(display_width, display_height, filename):
     # image from:
     # https://www.zebrafishfilm.org/
 
@@ -143,7 +143,7 @@ def visualizeFish(display_width, display_height):
     new_rows_list = []
 
     # open and read the data from the CSV
-    with open('fishDataCorrected.csv', newline='') as csvFile:
+    with open(filename, newline='') as csvFile:
         reader = csv.DictReader(csvFile)
         for row in reader:
             new_rows_list.append(row)
