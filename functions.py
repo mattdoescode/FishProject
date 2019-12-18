@@ -63,8 +63,8 @@ def averageCSV(inputFileName, outputFileName):
                         fakeFrameCount + 1)
                 yIncrement = (float(row.get("y-position")) - float(previousRecord.get("y-position"))) / (
                         fakeFrameCount + 1)
-                # zIncrement = (float(row.get("z-position")) - float(previousRecord.get("z-position"))) / (
-                #        fakeFrameCount + 1)
+                zIncrement = (float(row.get("z-position")) - float(previousRecord.get("z-position"))) / (
+                        fakeFrameCount + 1)
                 # print(float(row.get("x-position")))
                 # print(float(previousRecord.get("x-position")))
                 # print(xIncrement)
@@ -81,8 +81,8 @@ def averageCSV(inputFileName, outputFileName):
                         {"x-position": float(previousRecord.get("x-position")) + (frameCounter * xIncrement)})
                     fakeRecord.update(
                         {"y-position": float(previousRecord.get("y-position")) + (frameCounter * yIncrement)})
-                   #fakeRecord.update(
-                   #   {"z-position": float(previousRecord.get("z-position")) + (frameCounter * zIncrement)})
+                    fakeRecord.update(
+                     {"z-position": float(previousRecord.get("z-position")) + (frameCounter * zIncrement)})
                     fakeRecord.update({"corrected": 1})
                     totalLines = totalLines + 1
                     frameCounter = frameCounter + 1
