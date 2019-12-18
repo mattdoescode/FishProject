@@ -9,13 +9,6 @@ def writeHeadCSV(filename):
         fileWriter.writerow(GLOBALHEAD)
 
 
-def writeToCSV(filename, data):
-    # write a new csv file
-    with open(filename + ".csv", 'w', newline='') as csvFile:
-        fileWriter = csv.writer(csvFile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-        fileWriter.writerow(data)
-
-
 def appendToCSV(filename, data):
     with open(filename + '.csv', 'a', newline='') as f:
         writer = csv.writer(f)
@@ -175,3 +168,10 @@ def visualizeFish(display_width, display_height, filename):
 
     pygame.quit()
     quit()
+
+
+def visualizeFishRealTime(xPosition, yPosition, zPosition):
+
+
+
+    print("running")

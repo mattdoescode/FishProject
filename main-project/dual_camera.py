@@ -27,11 +27,9 @@ if args.get("video", None) is None:
 else:
     vs = cv2.VideoCapture(args["video"])
 
+fileName = "fishdata-dual-cam"
 # initialize the csv file
-headRow = ["object-number", "recorded-time", "run-time", "frame-number", "x-position", "y-position", "z-position"]
-functions.writeToCSV("fishdata-1", headRow)
-
-functions.writeToCSV("fishdata-2", headRow)
+functions.writeHeadCSV(fileName)
 
 # frame counter (recorded in the CSV)
 frameCount = 0
@@ -45,6 +43,16 @@ totalRunTime = time.time()
 firstFrame = None
 firstFrame2 = None
 
+# camera positions
+x = 0
+y = 0
+z = 0
+x2 = 0
+y2 = 0
+z2 = 0
+centerX = 0
+centerY = 0
+centerY2 = 0
 # loop over the frames of the video
 while True:
     # grab the current frame and initialize the occupied/unoccupied
@@ -107,23 +115,13 @@ while True:
 
         if objectCount == largestObjCount:
             cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-            # # record the data in accordance to the timer
-            # if nextFrameTime <= time.time():
-            #     nextFrameTime = nextFrameTime + 0.1
-            #     print("adding record to CSV")
-            #     xPos = x + (w / 2)
-            #     yPos = y + (h / 2)
-            #     dataToRecord = [1, datetime.datetime.now(), time.time() - totalRunTime, frameCount, xPos,
-            #                     yPos, 0]
-            #     functions.appendToCSV(dataToRecord)
-            #     frameCount = frameCount + 1
+            centerX = x + (w / 2)
+            centerY = y + (h / 2)
+            cv2.circle(frame, (round(centerX), round(centerY)), 3, (255, 255, 255), -1)
         else:
             cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2)
 
         text = "The fish is moving"
-
-        # print out the x and y for each tracked object
-        # print("Xpos :", x, "Ypos :", y)
 
     # draw the text and timestamp on the frame
     cv2.putText(frame, "Room Status: {}".format(text), (10, 20),
@@ -135,6 +133,7 @@ while True:
 
     # grab the current frame and initialize the occupied/unoccupied
     # text
+
     frame2 = vs2.read()
     text2 = "No movement"
 
@@ -192,23 +191,13 @@ while True:
 
         if objectCount2 == largestObjCount2:
             cv2.rectangle(frame2, (x2, y2), (x2 + w2, y2 + h2), (0, 255, 0), 2)
-            # record the data in accordance to the timer
-            # if nextFrameTime <= time.time():
-            #     nextFrameTime = nextFrameTime + 0.1
-            #     print("adding record to CSV")
-            #     xPos = x + (w / 2)
-            #     yPos = y + (h / 2)
-            #     dataToRecord = [1, datetime.datetime.now(), time.time() - totalRunTime, frameCount, xPos,
-            #                     yPos, 0]
-            #     functions.appendToCSV(dataToRecord)
-            #     frameCount = frameCount + 1
+            centerX2 = x2 + (w2/ 2)
+            centerY2 = y2 + (h2 / 2)
+            cv2.circle(frame2, (round(centerX2), round(centerY2)), 3, (255, 255, 255), -1)
         else:
             cv2.rectangle(frame2, (x2, y2), (x2 + w2, y2 + h2), (0, 0, 255), 2)
 
         text2 = "The fish is moving"
-
-        # print out the x and y for each tracked object
-        # print("Xpos :", x, "Ypos :", y)
 
     # draw the text and timestamp on the frame
     cv2.putText(frame2, "Room Status: {}".format(text2), (10, 20),
@@ -218,10 +207,23 @@ while True:
 
     ##### DISPLAY #####
 
+    # Camera 1 x,y
+        # camera 1 z position is camera 2 y
+    # Camera 2 x,y
+        # camera 2 z position is camera 1 y
+    # join cams on their X
+    if centerX != 0 and centerY != 0 and centerY2 != 0:
+        data = [1, datetime.datetime.now(), time.time() - totalRunTime, frameCount, centerX, centerY, centerY2, 0]
+
+        frameCount = frameCount + 1
+
+        # do recording to CSV shit here
+        functions.appendToCSV(fileName, data)
+
     # show the frame and record if the user presses a key
     cv2.imshow("Camera 1", frame)
-    cv2.imshow("Thresh", thresh)
-    cv2.imshow("Frame Delta", frameDelta)
+    cv2.imshow("Thresh 1", thresh)
+    cv2.imshow("Frame Delta 1", frameDelta)
     cv2.imshow("Camera 2", frame2)
     cv2.imshow("Thresh 2", thresh2)
     cv2.imshow("Frame Delta 2", frameDelta2)
