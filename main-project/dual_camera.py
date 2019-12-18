@@ -12,6 +12,8 @@ import cv2
 
 import functions
 
+cameraSize = 500
+
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
 ap.add_argument("-v", "--video", help="path to the video file")
@@ -67,7 +69,7 @@ while True:
         break
 
     # resize the frame, convert it to grayscale, and blur it
-    frame = imutils.resize(frame, width=500)
+    frame = imutils.resize(frame, width=cameraSize)
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     gray = cv2.GaussianBlur(gray, (21, 21), 0)
 
@@ -143,7 +145,7 @@ while True:
         break
 
     # resize the frame, convert it to grayscale, and blur it
-    frame2 = imutils.resize(frame2, width=500)
+    frame2 = imutils.resize(frame2, width=cameraSize)
     gray2 = cv2.cvtColor(frame2, cv2.COLOR_BGR2GRAY)
     gray2 = cv2.GaussianBlur(gray2, (21, 21), 0)
 
@@ -212,6 +214,7 @@ while True:
     # Camera 2 x,y
         # camera 2 z position is camera 1 y
     # join cams on their X
+    # if we have movement do something
     if centerX != 0 and centerY != 0 and centerY2 != 0:
         data = [1, datetime.datetime.now(), time.time() - totalRunTime, frameCount, centerX, centerY, centerY2, 0]
 
