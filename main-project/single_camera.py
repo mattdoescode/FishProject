@@ -103,23 +103,21 @@ while True:
 
 		if objectCount == largestObjCount:
 			cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+			centerX = x + (w / 2)
+			centerY = y + (h / 2)
+			cv2.circle(frame, (round(centerX), round(centerY)), 3, (255, 255, 255), -1)
 			# record the data in accordance to the timer
 			if nextFrameTime <= time.time():
 				nextFrameTime = nextFrameTime + 0.1
 				print("adding record to CSV")
-				xPos = x + (w / 2)
-				yPos = y + (h / 2)
-				dataToRecord = [1, datetime.datetime.now(), time.time() - totalRunTime, frameCount, xPos,
-								yPos, 0]
+				dataToRecord = [1, datetime.datetime.now(), time.time() - totalRunTime, frameCount, centerX,
+								centerY, 0]
 				functions.appendToCSV(inputFileName, dataToRecord)
 				frameCount = frameCount + 1
 		else:
 			cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2)
 
 		text = "The fish is moving"
-
-		# print out the x and y for each tracked object
-		# print("Xpos :", x, "Ypos :", y)
 
 	# draw the text and timestamp on the frame
 	cv2.putText(frame, "Room Status: {}".format(text), (10, 20),
