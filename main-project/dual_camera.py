@@ -9,6 +9,7 @@ import datetime
 import imutils
 import time
 import cv2
+import pygame
 
 import functions
 
@@ -55,8 +56,35 @@ z2 = 0
 centerX = 0
 centerY = 0
 centerY2 = 0
+
+pygame.init()
+
+gameDisplay = pygame.display.set_mode((cameraSize, cameraSize))
+
+pygame.display.set_caption('ZebraFish Visual')
+
+# load the image of fish
+fishImg = pygame.image.load('zebrafish.png')
+
+maxFishSizeX, maxFishSizeY = fishImg.get_rect().size
+
+def fish(x, y):
+    gameDisplay.blit(fishImg, (x, y))
+
+
+clock = pygame.time.Clock()
+crashed = False
+
+black = (0, 0, 0)
+
 # loop over the frames of the video
-while True:
+while not crashed:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            crashed = True
+
+    gameDisplay.fill(black)
+
     # grab the current frame and initialize the occupied/unoccupied
     # text
     frame = vs.read()
@@ -87,7 +115,7 @@ while True:
     # on thresholded image
     thresh = cv2.dilate(thresh, None, iterations=2)
     cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
-        cv2.CHAIN_APPROX_SIMPLE)
+                            cv2.CHAIN_APPROX_SIMPLE)
     cnts = imutils.grab_contours(cnts)
 
     # loop over the contours
@@ -97,8 +125,8 @@ while True:
     count = 1
     for c in cnts:
         (x, y, w, h) = cv2.boundingRect(c)
-        if w*h > largestObjSize:
-            largestObjSize = w*h
+        if w * h > largestObjSize:
+            largestObjSize = w * h
             largestObjCount = count
         count = count + 1
 
@@ -113,7 +141,7 @@ while True:
         # and update the text
         (x, y, w, h) = cv2.boundingRect(c)
 
-        #print("object count is: ", objectCount, "largest obj count is: ", largestObjCount)
+        # print("object count is: ", objectCount, "largest obj count is: ", largestObjCount)
 
         if objectCount == largestObjCount:
             cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
@@ -127,9 +155,9 @@ while True:
 
     # draw the text and timestamp on the frame
     cv2.putText(frame, "Room Status: {}".format(text), (10, 20),
-        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
     cv2.putText(frame, datetime.datetime.now().strftime("%A %d %B %Y %I:%M:%S%p"),
-        (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
+                (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
 
     ############ camera 2 #################
 
@@ -163,7 +191,7 @@ while True:
     # on thresholded image
     thresh2 = cv2.dilate(thresh2, None, iterations=2)
     cnts2 = cv2.findContours(thresh2.copy(), cv2.RETR_EXTERNAL,
-                            cv2.CHAIN_APPROX_SIMPLE)
+                             cv2.CHAIN_APPROX_SIMPLE)
     cnts2 = imutils.grab_contours(cnts2)
 
     # loop over the contours
@@ -193,7 +221,7 @@ while True:
 
         if objectCount2 == largestObjCount2:
             cv2.rectangle(frame2, (x2, y2), (x2 + w2, y2 + h2), (0, 255, 0), 2)
-            centerX2 = x2 + (w2/ 2)
+            centerX2 = x2 + (w2 / 2)
             centerY2 = y2 + (h2 / 2)
             cv2.circle(frame2, (round(centerX2), round(centerY2)), 3, (255, 255, 255), -1)
         else:
@@ -210,9 +238,9 @@ while True:
     ##### DISPLAY #####
 
     # Camera 1 x,y
-        # camera 1 z position is camera 2 y
+    # camera 1 z position is camera 2 y
     # Camera 2 x,y
-        # camera 2 z position is camera 1 y
+    # camera 2 z position is camera 1 y
     # join cams on their X
     # if we have movement do something
     if centerX != 0 and centerY != 0 and centerY2 != 0:
@@ -223,6 +251,18 @@ while True:
         # do recording to CSV shit here
         functions.appendToCSV(fileName, data)
 
+        # scale of fish img is based off of centerY2 centerY2 has a max value of cameraSize and smallest value of 0
+        # maxFishSizeX
+        # maxFishSizeY
+
+        OldRange = (cameraSize - 0)
+        NewRange = (100 - 0)
+        NewValue = (((centerY2 - 0) * NewRange) / OldRange) + 0
+
+        fishImg = pygame.transform.scale(fishImg, (round(NewValue), round(NewValue)))
+        fishImg = fishImg.convert()
+        fish(centerX, centerY)
+
     # show the frame and record if the user presses a key
     cv2.imshow("Camera 1", frame)
     cv2.imshow("Thresh 1", thresh)
@@ -232,6 +272,8 @@ while True:
     cv2.imshow("Frame Delta 2", frameDelta2)
 
     key = cv2.waitKey(1) & 0xFF
+
+    pygame.display.update()
 
     # if the `q` key is pressed, break from the lop
     if key == ord("q"):

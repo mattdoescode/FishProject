@@ -168,10 +168,3 @@ def visualizeFish(display_width, display_height, filename):
 
     pygame.quit()
     quit()
-
-
-def visualizeFishRealTime(xPosition, yPosition, zPosition):
-
-
-
-    print("running")
