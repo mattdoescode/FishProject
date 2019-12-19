@@ -23,8 +23,8 @@ args = vars(ap.parse_args())
 
 # if the video argument is None, then we are reading from webcam
 if args.get("video", None) is None:
-    vs = VideoStream(src=0).start()
-    vs2 = VideoStream(src=1).start()
+    vs = VideoStream(src=1).start()
+    vs2 = VideoStream(src=0).start()
     time.sleep(2.0)
 # otherwise, we are reading from a video file
 else:
@@ -166,6 +166,9 @@ while not crashed:
     # text
 
     frame2 = vs2.read()
+
+    frame2 = cv2.flip(frame2, 1)
+
     text2 = "No movement"
 
     # if the frame could not be grabbed, then we have reached the end
@@ -263,7 +266,7 @@ while not crashed:
         NewRange = (100 - 0)
         NewValue = (((centerY2 - 0) * NewRange) / OldRange) + 0
 
-        fishImg = pygame.transform.scale(fishImg, (round(NewValue), round(NewValue)))
+        # fishImg = pygame.transform.scale(fishImg, (round(NewValue), round(NewValue)))
         # fishImg = fishImg.convert()
         fish(centerX, centerY)
 
@@ -281,7 +284,7 @@ while not crashed:
 
     # if the `q` key is pressed, break from the lop
     if key == ord("q"):
-        functions.averageCSV()
+        functions.averageCSV("fishdata-dual-cam", "fishdata-dual-cam-corrected")
         exit()
 
 # cleanup the camera and close any open windows
