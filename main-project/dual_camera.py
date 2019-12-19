@@ -55,6 +55,7 @@ y2 = 0
 z2 = 0
 centerX = 0
 centerY = 0
+centerX2 = 0
 centerY2 = 0
 
 pygame.init()
@@ -237,6 +238,9 @@ while not crashed:
 
     ##### DISPLAY #####
 
+    print("current Camera 1: X, Y, Z", centerX, " ", centerY, " ", centerY2, " current camera 2: X, Y, Z ", centerX2,
+          " ", centerY2, " ", centerY)
+
     # Camera 1 x,y
     # camera 1 z position is camera 2 y
     # Camera 2 x,y
@@ -260,7 +264,7 @@ while not crashed:
         NewValue = (((centerY2 - 0) * NewRange) / OldRange) + 0
 
         fishImg = pygame.transform.scale(fishImg, (round(NewValue), round(NewValue)))
-        fishImg = fishImg.convert()
+        # fishImg = fishImg.convert()
         fish(centerX, centerY)
 
     # show the frame and record if the user presses a key
