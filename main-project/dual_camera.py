@@ -13,6 +13,7 @@ import pygame
 
 import functions
 
+# display size
 cameraSize = 500
 
 # construct the argument parser and parse the arguments
@@ -46,7 +47,7 @@ totalRunTime = time.time()
 firstFrame = None
 firstFrame2 = None
 
-# camera positions
+# camera positions + tracking positions
 x = 0
 y = 0
 z = 0
@@ -69,6 +70,7 @@ fishImg = pygame.image.load('zebrafish.png')
 
 maxFishSizeX, maxFishSizeY = fishImg.get_rect().size
 
+# draw fish to screen
 def fish(x, y):
     gameDisplay.blit(fishImg, (x, y))
 
