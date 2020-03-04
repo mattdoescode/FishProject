@@ -13,13 +13,12 @@ import pygame
 
 import functions
 
-# display size
 cameraSize = 500
 
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
 ap.add_argument("-v", "--video", help="path to the video file")
-ap.add_argument("-a", "--min-area", type=int, default=700, help="minimum area size")
+ap.add_argument("-a", "--min-area", type=int, default=200, help="minimum area size")
 args = vars(ap.parse_args())
 
 # if the video argument is None, then we are reading from webcam
@@ -47,7 +46,7 @@ totalRunTime = time.time()
 firstFrame = None
 firstFrame2 = None
 
-# camera positions + tracking positions
+# camera positions
 x = 0
 y = 0
 z = 0
@@ -61,6 +60,8 @@ centerY2 = 0
 
 pygame.init()
 
+print("starting dual camera tracking")
+
 gameDisplay = pygame.display.set_mode((cameraSize, cameraSize))
 
 pygame.display.set_caption('ZebraFish Visual')
@@ -70,7 +71,7 @@ fishImg = pygame.image.load('zebrafish.png')
 
 maxFishSizeX, maxFishSizeY = fishImg.get_rect().size
 
-# draw fish to screen
+
 def fish(x, y):
     gameDisplay.blit(fishImg, (x, y))
 
@@ -151,6 +152,7 @@ while not crashed:
             centerX = x + (w / 2)
             centerY = y + (h / 2)
             cv2.circle(frame, (round(centerX), round(centerY)), 3, (255, 255, 255), -1)
+            cv2.putText(frame, str(x) + ", " + str(y), (int(centerX), int(centerY)), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 1)
         else:
             cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2)
 
@@ -169,7 +171,7 @@ while not crashed:
 
     frame2 = vs2.read()
 
-    frame2 = cv2.flip(frame2, 1)
+    #  frame2 = cv2.flip(frame2, 1)
 
     text2 = "No movement"
 
@@ -230,6 +232,7 @@ while not crashed:
             centerX2 = x2 + (w2 / 2)
             centerY2 = y2 + (h2 / 2)
             cv2.circle(frame2, (round(centerX2), round(centerY2)), 3, (255, 255, 255), -1)
+            cv2.putText(frame2, str(x2) + ", " + str(y2), (int(centerX2), int(centerY2)), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 1)
         else:
             cv2.rectangle(frame2, (x2, y2), (x2 + w2, y2 + h2), (0, 0, 255), 2)
 
@@ -240,6 +243,10 @@ while not crashed:
                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
     cv2.putText(frame2, datetime.datetime.now().strftime("%A %d %B %Y %I:%M:%S%p"),
                 (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
+
+    cv2.putText(frame2, "0, 0", (20, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+
+    cv2.putText(frame, "0, 0", (20, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
 
     ##### DISPLAY #####
 
@@ -268,8 +275,8 @@ while not crashed:
         NewRange = (100 - 0)
         NewValue = (((centerY2 - 0) * NewRange) / OldRange) + 0
 
-        # fishImg = pygame.transform.scale(fishImg, (round(NewValue), round(NewValue)))
-        # fishImg = fishImg.convert()
+        fishImg = pygame.transform.scale(fishImg, (int(NewValue), int(NewValue)))
+        fishImg = fishImg.convert()
         fish(centerX, centerY)
 
     # show the frame and record if the user presses a key

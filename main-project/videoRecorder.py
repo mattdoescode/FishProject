@@ -6,7 +6,7 @@ cap = cv2.VideoCapture(0)
 cap2 = cv2.VideoCapture(1)
 
 # Check if camera opened successfully
-if (cap.isOpened() == False):
+if cap.isOpened() == False:
     print("Unable to read camera feed")
 
 # Default resolutions of the frame are obtained.The default resolutions are system dependent.
