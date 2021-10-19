@@ -4,5 +4,5 @@ __pycache__
 *.csv
 play
 *.avi
-fishvideos/*
-computer vision/weights/*
+computer-vision/weights/*
+computer-vision/Videos/*
