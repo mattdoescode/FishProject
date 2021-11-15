@@ -23,6 +23,27 @@ Image 1
 
 This tracking system will be controlled by a convolution neural network implemented through the YOLO (You Only Look Once) V3 framework. Furthermore a SORT algorithm is applied to our technique to allow for fish to be individually identified during experimentation this also accounts for tracking loss if any.
 
+
+[[TALK ABOUT TRAINING NETWORK AND HOW EVERRYTHING WORKS]]
+
+## How to train on custom data 
+1. Create the training data.  You will need annotated images. These must be from converted videos or other images. Free online sources such as CVAT, makesense.ai, or Labelbox can help with this. My personal favorite resource for this is supervise.ly (however some functions on this website are not free; I never had to pay for anything). 
+2. Labeln data. Once labeled data has been acquired we need to export the data to fit the Yolov3 specifications. 
+3. From supervise.ly if you imported videos convert the labeled videos to images using the "Videos project to images project" plugin https://app.supervise.ly/ecosystem/apps/supervisely-ecosystem%2Fturn-video-project-into-images. 
+4. Download the data as ".json / Images" 
+5. Supervise.ly does not support exporting to Yolo so we need to convert the data. Create a Roboflow account.
+6. Make a new dataset on Roboflow and upload the decompressed folder from Supervise.ly. You will now see a list of all your labeled images (make sure images resizing is turned off). You can also add data augmentation here if you would like. 
+7. Go to the dataset tab and click export -> Yolov3 Pytorch. This download will be your training data for Yolo. 
+8. Create custom .yaml file - This file 
+
+
+
+https://github.com/ultralytics/yolov3/wiki/Train-Custom-Data
+
+
+
+COCO dataset 
+
 ## Objectives of this project
 
 1. A simple UI to select videos and set some settings including which visualization to show (if this takes time you can define settings at the beginning of your code, so we can change parameters directly in the code)
@@ -46,7 +67,7 @@ This tracking system will be controlled by a convolution neural network implemen
 
 ## Why Yolo V3? and SORT
 
-Real time low processing requirements
+Designed for real time tracking. Has tracking results similar to other image processing frameworks but is up to 4 times faster.
 
 ## Improvements to be made
 
