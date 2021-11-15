@@ -1,56 +1,87 @@
 # Fish VR Project
 
-A MS Spatial Informatics and Engineering Masters Project Umaine by Matthew Loewen
+An MS Spatial Informatics and Engineering Masters Project at Umaine by Matthew Loewen
+
 Advisory Committee
 
 - Nicholas Giudice
 - Nimesha Ranasinghe
 - Max Egenhofer
 
-Project started by Nimesha Ranasinghe & Nishad Jayasundara
+This project was started by Nimesha Ranasinghe & Nishad Jayasundara.
+
+This repository and project serve as an exploration into automated experimental behavioral studies for fish. More so, this project is meant to be a guide for future research. It outlines what work has been completed and why and how to continue work on this project.
 
 ## About
 
-FishVR’s main objective is to combine artificial intelligence (AI) and virtual reality (VR) to design an interactive and adaptive system for studying fish behavior. This behavioral research is an essential part of ecology, and fish health studies. Furthermore, it aims to address gaps of research in animal behavior studies, in particular research in fish behavioral response to visual stimuli. Most existing research is either inaccurate, basic, repetitive, and/or outdated. The key difference between this project and what currently exists is that FishVR seeks to automate the process of fish tracking. The end goal for this project is to have a self-sustaining "full loop" system containing 3 different aspects of automated tracking, displaying, and recording.
+FishVR's main objective is to combine artificial intelligence (AI) and virtual reality (VR) to design an interactive and adaptive system for studying fish behavior. This behavioral research is an essential part of ecology and fish health studies. Furthermore, it aims to address research gaps in animal behavior studies, particularly behavioral responses to visual stimuli. Most existing research is either inaccurate, basic, repetitive, or outdated. The critical improvement made by this project is that FishVR seeks to automate the process of fish tracking, data collection, and experimentation. The end goal is to have an autonomous "full loop" system containing three automated tracking, displaying, and recording aspects.
 
-[[SOMETHING ABOUT PROVIDING METRICS about tracking results]]
-
-This goal will be completed through by the design of a two camera tracking system (See image 1). Physical setup of project requires a fishtank, 2 web cameras, an enclosure (to control light pollution and ensure uniform lighting conditions for all tests), and a diffused led strip for white light. Setup with a camera pointed directly at the front of the tank to capture x and y dimensions of of the fish tank with a camera on top to record z and y dimensions. Recordings can be combined on the y axis to confirm tracking is accurate. Once each frame of video is processed a 3D location of the fish is determined and then saved to local SQL database. Behind the fish tank a monitor is placed against the glass where visuals are displayed for the fish to interact with. These visuals are basic geometric shapes, single fish, and a school of fish, these options have parameters for a solid colored background(s) to be inserted or changed. The visuals can be manually changed via a simple GUI.
+These objectives are completed through the design of a two-camera tracking system (See image 1). The physical setup of the project requires a fish tank, two web cameras, an enclosure (to control light pollution and ensure uniform lighting conditions for all tests), and a diffused led strip for white light. The cameras, one pointed directly at the front of the tank to capture x and y dimensions. The other pointed at the top to record z and y dimensions. Recordings are combined on the y axis to confirm tracking is accurate. Each video frame is processed and checked for accuracy; this results in the fish's 3D location (relative to the cameras) and saved to a local SQL database.
 
 Image 1
 
 ![Image 1 - Physical setup of fishVR](https://github.com/mattdoescode/FishProject/blob/master/frame%20differencing/graphics/illustration_without_dimensions.jpg)
 
-This tracking system will be controlled by a convolution neural network implemented through the YOLO (You Only Look Once) V3 framework. Furthermore a SORT algorithm is applied to our technique to allow for fish to be individually identified during experimentation this also accounts for tracking loss if any.
+Behind the fish tank, a monitor is placed against the glass such that visuals can be displayed. These visuals are basic geometric shapes, single simulated fish, and a school of simulated fish; these options have parameters for solid colored background(s) to be inserted or changed. The visuals can be manually adjusted via a simple GUI. These visuals are influenced based on the location of the experiment fish.
 
+### The autonomous systems makeup
 
-[[TALK ABOUT TRAINING NETWORK AND HOW EVERRYTHING WORKS]]
+#### Tracking
 
-## How to train on custom data 
-1. Create the training data.  You will need annotated images. These must be from converted videos or other images. Free online sources such as CVAT, makesense.ai, or Labelbox can help with this. My personal favorite resource for this is supervise.ly (however some functions on this website are not free; I never had to pay for anything). 
-2. Labeln data. Once labeled data has been acquired we need to export the data to fit the Yolov3 specifications. 
-3. From supervise.ly if you imported videos convert the labeled videos to images using the "Videos project to images project" plugin https://app.supervise.ly/ecosystem/apps/supervisely-ecosystem%2Fturn-video-project-into-images. 
-4. Download the data as ".json / Images" 
-5. Supervise.ly does not support exporting to Yolo so we need to convert the data. Create a Roboflow account.
-6. Make a new dataset on Roboflow and upload the decompressed folder from Supervise.ly. You will now see a list of all your labeled images (make sure images resizing is turned off). You can also add data augmentation here if you would like. 
-7. Go to the dataset tab and click export -> Yolov3 Pytorch. This download will be your training data for Yolo. 
-8. Create custom .yaml file - This file 
+A convolution neural network controls this tracking system implemented through the YOLO (You Only Look Once) V3 framework.
 
+[[Why Yolo v3, how Yolo v3 works, what exists in other applications]]
 
+Furthermore, a SORT algorithm is applied to allow for fish to be individually identified during experimentation. This algorithm also accounts for tracking loss, if any.
 
-https://github.com/ultralytics/yolov3/wiki/Train-Custom-Data
+#### Displaying
 
+[[See email from Nishad and write software]]
 
+#### Recording
 
-COCO dataset 
+[[Explain current code]]
 
-## Objectives of this project
+[[improvements to be made -> camera calibration (grids) adjust for radial distortion, position T and orientation R]]
+[[Photogrammetry]]
+[[Linear transformations -> introduce parallax]]
 
-1. A simple UI to select videos and set some settings including which visualization to show (if this takes time you can define settings at the beginning of your code, so we can change parameters directly in the code)
+[[Write]]
+
+[[tracking, displaying, and recording]]
+
+[[talk about training here]]
+
+## How to train on custom data
+
+0. Warning. Training on custom data sets can take hours to days, depending on the size of the data set and other factors.
+1. Create the training data. You will need annotated images. These must be from converted videos or other images. Free online sources such as CVAT, makesense.ai, or Labelbox can help with this. My favorite resource for this is Supervise.ly.
+2. Label data. This process is slightly different depending on the tool you use. Once labeled data has been acquired, it needs to be exported to fit the Yolov3 specifications.
+3. Convert. From Supervise.ly, if you imported videos, convert the labeled videos to images using the "[Videos project to images project](https://app.supervise.ly/ecosystem/apps/supervisely-ecosystem%2Fturn-video-project-into-images)" plugin.
+4. Download. Download the data as ".json / Images" and decompress the folder.
+5. Roboflow sign up. Supervise.ly does not support exporting to Yolo, so we need to convert the data. Create a Roboflow account.
+6. Upload to Roboflow. Make a new dataset on Roboflow and upload the decompressed folder from Supervise.ly. You will now see a list of all your labeled images (make sure image resizing is turned off). You can also add data augmentation here if you would like. [DATA + VAL settings?]
+7. Convert again. Go to the dataset tab on Roboflow and click export -> Yolov3 Pytorch. This download will be your training data for Yolo.
+8. To train Yolo, we need to create a .yaml file. This file tells Yolo where our training and validation data is, the number of classes we want (different detectable objects), and the corresponding names. A second .yaml file can be provided here to specify a network architecture change; however, the default option works for our application.
+9. Training parameters. Yolo needs to be configured to process our training data correctly.
+   Data: The path to the .yaml file
+   Img: The size of training images (640 x 480 etc.)
+   Batch: Number of parts of our dataset. The number of images used per training set. (we can't feed all our training data at once into the network).
+   Epoch: Number of training rounds for the entire data set.
+   Cfg: Path for the second .yaml file
+   Weights: Transformation(s) to be applied to input data.
+   Conf: Confidence threshold. What confidence percentage can we assume we have found the supposed object?
+10. Train. This step could take hours depending on the parameters set and dataset size. Once completed, a .pt file is created.
+
+See (here)[https://github.com/ultralytics/yolov3/wiki/Train-Custom-Data] for more.
+
+## Deliverables of this project
+
+1. A simple UI to select videos and set some settings, including which visualization to show (if this takes time, you can define settings at the beginning of your code so that we can change parameters directly in the code)
 2. First, a user will select a pre-recorded video
-3. Start the fish tracking (you already have this, use whatever the current version)
-4. Start updating the database and display tracking info on a web page (I presume you already have this too - at least a basic version)
-5. Visualization or the VR environment (we need to discuss this with Nishad to define what exactly we need - I am not sure we need something like Unity or a simple 2D interface)
+   Start the fish tracking (you already have this, use whatever the current version)
+3. Start updating the database and display tracking info on a web page
+4. Visualization or the VR environment (we need to discuss this with Nishad to define what exactly we need - I am not sure we need something like Unity or a simple 2D interface)
 
 ## Completed part of the project
 
@@ -65,13 +96,15 @@ COCO dataset
 - Dual tracking
 - UI for recording or live video analysis
 
-## Why Yolo V3? and SORT
+## Why YOLOv3
 
-Designed for real time tracking. Has tracking results similar to other image processing frameworks but is up to 4 times faster.
+YOLOv3 is used because it's a lightweight implementation of a real-time object detection algorithm. YOLOv3 offers accelerated processing time when compared to other solutions; it is the best performing library in terms of correct predictions compared to the processing power required.
+
+## What is Sort?
 
 ## Improvements to be made
 
-### Bounding box around tank and interpolation from pixels to real world dimensions
+### Bounding box around tank and interpolation from pixels to real-world dimensions
 
 ## Challenges
 
