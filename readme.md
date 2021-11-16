@@ -19,7 +19,7 @@ FishVR's main objective is to combine artificial intelligence (AI) and virtual r
 These objectives are completed through the design of a two-camera tracking system (See image 1). The physical setup of the project requires a fish tank, two web cameras, an enclosure (to control light pollution and ensure uniform lighting conditions for all tests), and a diffused led strip for white light. The cameras, one pointed directly at the front of the tank to capture x and y dimensions. The other pointed at the top to record z and y dimensions. Recordings are combined on the y axis to confirm tracking is accurate. Each video frame is processed and checked for accuracy; this results in the fish's 3D location (relative to the cameras) and saved to a local SQL database.
 
 Image 1
-[Image 1 - Physical setup of fishVR](https://github.com/mattdoescode/FishProject/blob/master/frame%20differencing/graphics/illustration_without_dimensions.jpg)
+![Image 1 - Physical setup of fishVR](https://github.com/mattdoescode/FishProject/blob/master/frame%20differencing/graphics/illustration_without_dimensions.jpg)
 
 Behind the fish tank, a monitor is placed against the glass such that fish can see the screen. The screen will display basic geometric shapes, single simulated fish, and a school of simulated fish; these options have parameters for solid colored background(s) to be inserted or changed. The visuals can be manually adjusted via a simple GUI. These visuals are influenced based on the location of the experiment fish.
 
