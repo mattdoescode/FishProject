@@ -8,4 +8,5 @@ computer-vision/weights/*
 computer-vision/Videos/*
 computer-vision/code/fishvr-master-forked/zebra-fish-training-data/*
 runs/*
+wandb/*
 *.pt

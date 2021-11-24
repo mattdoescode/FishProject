@@ -472,11 +472,11 @@ if __name__ == '__main__':
                         default='zebraFish.yml', help='data.yaml path')
     parser.add_argument(
         '--hyp', type=str, default='data/hyp.scratch.yaml', help='hyperparameters path')
-    parser.add_argument('--epochs', type=int, default=300)
-    parser.add_argument('--batch-size', type=int, default=16,
+    parser.add_argument('--epochs', type=int, default=10)
+    parser.add_argument('--batch-size', type=int, default=5,
                         help='total batch size for all GPUs')
     parser.add_argument('--img-size', nargs='+', type=int,
-                        default=[640, 480], help='[train, test] image sizes')
+                        default=[1598, 39], help='[train, test] image sizes')
     parser.add_argument('--rect', action='store_true',
                         help='rectangular training')
     parser.add_argument('--resume', nargs='?', const=True,
@@ -494,7 +494,7 @@ if __name__ == '__main__':
                         help='cache images for faster training')
     parser.add_argument('--image-weights', action='store_true',
                         help='use weighted image selection for training')
-    parser.add_argument('--device', default='',
+    parser.add_argument('--device', default='0',
                         help='cuda device, i.e. 0 or 0,1,2,3 or cpu')
     parser.add_argument('--multi-scale', action='store_true',
                         help='vary img-size +/- 50%%')
