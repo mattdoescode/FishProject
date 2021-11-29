@@ -33,9 +33,9 @@ For tracking YOLO is used in combination with a SORT algorithm. YOLO is used for
 
 ##### YOLO
 
-Introduced by Joseph Redmon, in his 2016 paper [You Only Look Once: Unified, Real-Time Object Detection](https://arxiv.org/pdf/1506.02640.pdf) a new approach to object detection capable of running in real-time is introduced. This work proposes a single neural network capable of both predicting bounding boxes and class probabilities of objects. At the time of release other object detectors are using entirely separate networks for feature extraction and object localization. This approach revolutionized real-time object detection because it achieves a high mean average projection (mAP) score (evaluation metric for object detection) double that of other real-time detectors. Improvements upon the network released in 2018 called YOLOv3, increased both the mAP score and frame per second count.
+Introduced by Joseph Redmon, in his 2016 paper [You Only Look Once: Unified, Real-Time Object Detection](https://arxiv.org/pdf/1506.02640.pdf) a new approach to object detection capable of running in real-time is introduced. This work proposes a single neural network capable of both predicting bounding boxes and class probabilities of objects. At the time of release other object detectors are using entirely separate networks for feature extraction and object localization. This approach revolutionized real-time object detection because it achieves a high mean average projection (mAP) score (evaluation metric for object detection) double that of other real-time detectors. Improvements upon the network released in 2018 called YOLOv3, increased both the mAP score and frame per second count. Yolo is based on the idea that “A single neural network predicts bounding boxes and class probabilities directly from full images in one evaluation. Since the whole detection pipeline is a single network, it can be optimized end-to-end directly on detection performance.”
 
-YOLO looks at object detection as a regression problem straight from pixels to bounding boxes and objects instead of a classification problem. Existing systems pass images through several networks multiple times whereas YOLO only processes an image once. Why YOLO works so well is for several reasons.1 it is able to make decisions globally about an image. 2 when training the network YOLO encodes contextual information about classes and their appearance. 3 it learns generalizable representations of objects meaning that objects in a new domain are more likely to be detected if not trained on. Finally, 4 features from the entire image are taken into account when predicting the bounding box and object. For example, YOLO is able to associate if some kind of object like a light switch is in a photo a light fixture is likely to also be somewhere in the image.
+YOLO looks at object detection as a regression problem straight from pixels to bounding boxes and objects instead of a classification problem. The paper says that this approach removes the need for a complicated processing pipeline. Existing systems pass images through several networks multiple times whereas YOLO only processes an image once. Why YOLO works so well is for several reasons.1 it is able to make decisions globally about an image. 2 when training the network YOLO encodes contextual information about classes and their appearance. 3 it learns generalizable representations of objects meaning that objects in a new domain are more likely to be detected if not trained on. Finally, 4 features from the entire image are taken into account when predicting the bounding box and object. For example, YOLO is able to associate if some kind of object like a light switch is in a photo a light fixture is likely to also be somewhere in the image.
 
 To oversimplify a bit YOLO is basically a series of convolution and pooling operations. The magic so to speak happens through the application of filters, learned training weights, and optimized activation functions. The key to YOLOs success is striking a balance between needed computational power vs strength of successful detection. Generally, the more operations applied to the CNN that is YOLO the greater the detection accuracy but at the determination of processing speed.
 
@@ -98,7 +98,36 @@ and we chose SORT instead.
 
 #### Displaying
 
-## Why YOLOv3 & What is it?
+## Setting up
+
+It is highly recommended that you have a CUDA-enabled graphics card ideally with 8+ GB of VRAM. It is possible to run this code on just a CPU; however- this will be at a rough performance determent of 95% (turning a task that would take 3 hours into a week+ for needed processing time). This code runs best in a Windows or Linux environment. The GPU is needed for real-time processing.
+
+The following instructions are how to get the project running on a windows computer with an Nvidia GPU.
+
+You will need to download the following:
+
+1. The repository from Github
+2. Python version 3 + pip + venv (pip and venv should be included with python download)
+3. Visual studio code (code editor)
+4. Cuda (Library that allows usage of the GPU) (Check https://pytorch.org/get-started/locally/ for the newest version of supported Cuda)
+
+Decompress the code repository.
+Make a new folder, name it “baseFolder”, and then move the repository into this folder. It should look like this:
+baseFolder/
+Fish-project/
+Open a terminal and navigate to the baseFolder directory. Here run the command "python -m venv fish-project-interpreter". This makes a virtual python interpreter that will be dedicated to this project. This will be saved in a folder called "fish-project-interpreter" to do edit these files.
+Open the baseFolder in visual studio code and select the "fish-project-interpreter" as the default interpreter.
+Select terminal -> new terminal. Then run the following command "pip install -r yolov3-master/requirements.txt" this will install the base requirements to run YOLO.
+Go to https://pytorch.org/get-started/locally/ and scroll down to "start locally" this will help you select the needed PyTorch and CUDA versions. Recommended options are
+PyTorch Build -> Stable
+Your OS -> Windows
+Package -> Pip
+Language -> Python
+Compute Platform -> Newest version of CUDA
+Copy and paste the "Run this command". Run this command in the open terminal in Visual studio code.
+Run "pip install wandb" (this is analytics for training).
+
+You are now setup for testing.
 
 ## How to train on custom data
 
@@ -114,7 +143,7 @@ and we chose SORT instead.
 9. Training parameters. Yolo needs to be configured to process our training data correctly.
    Data: The path to the .yaml file
    Img: The size of training images (640 x 480 etc.)
-   Batch: Number of parts of our dataset. The number of images used per training set. (we can't feed all our training data at once into the network).
+   Batch: Number of images we use for training at once. The more GPU memory the more images we can process at once.
    Epoch: Number of training rounds for the entire data set.
    Cfg: Path for the second .yaml file
    Weights: Transformation(s) to be applied to input data.
